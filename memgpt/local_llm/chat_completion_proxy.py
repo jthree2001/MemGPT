@@ -202,7 +202,6 @@ def get_chat_completion(
         usage["total_tokens"] = usage["prompt_tokens"] + usage["completion_tokens"]
 
     # unpack with response.choices[0].message.content
-    print("chat_completion_result")
     response = ChatCompletionResponse(
         id=str(uuid.uuid4()),  # TODO something better?
         choices=[
