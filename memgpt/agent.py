@@ -287,8 +287,7 @@ class Agent(object):
     def _trim_messages(self, num):
         """Trim messages from the front, not including the system message"""
         self.persistence_manager.trim_messages(num)
-
-        new_messages = [self.messages[0]] + self.messages[num:]
+        new_messages = [self._messages[0]] + self._messages[num:]
         self._messages = new_messages
 
     def _prepend_to_messages(self, added_messages: List[Message]):
@@ -296,11 +295,10 @@ class Agent(object):
         assert all([isinstance(msg, Message) for msg in added_messages])
 
         self.persistence_manager.prepend_to_messages(added_messages)
-
-        new_messages = [self.messages[0]] + added_messages + self.messages[1:]  # prepend (no system)
+        new_messages = [self._messages[0]] + added_messages + self._messages[1:]  # prepend (no system)
         self._messages = new_messages
         self.messages_total += len(added_messages)  # still should increment the message counter (summaries are additions too)
-
+        
     def _append_to_messages(self, added_messages: List[Message]):
         """Wrapper around self.messages.append to allow additional calls to a state/persistence manager"""
         assert all([isinstance(msg, Message) for msg in added_messages])
@@ -736,7 +734,9 @@ class Agent(object):
         remaining_message_count = len(self.messages[cutoff:])
         hidden_message_count = all_time_message_count - remaining_message_count
         summary_message_count = len(message_sequence_to_summarize)
+        # TODO(Michael): Add SPF summary 
         summary_message = package_summarize_message(summary, summary_message_count, hidden_message_count, all_time_message_count)
+        self.persistence_manager.messages = [{"timestamp": get_local_time(), "message": msg} for msg in self.messages.copy()]
         printd(f"Packaged into message: {summary_message}")
 
         prior_len = len(self.messages)
