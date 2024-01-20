@@ -4,8 +4,10 @@ import requests
 
 from memgpt.local_llm.settings.settings import get_completions_settings
 from memgpt.local_llm.utils import load_grammar_file, count_tokens
+from wmill import Windmill
+import json
 
-WEBUI_API_SUFFIX = "/v1/completions"
+WEBUI_API_SUFFIX = "/completions"
 
 
 def get_webui_completion(endpoint, prompt, context_window, grammar=None):
@@ -24,26 +26,20 @@ def get_webui_completion(endpoint, prompt, context_window, grammar=None):
     request["max_tokens"] = int(context_window - prompt_tokens)
     request["max_new_tokens"] = int(context_window - prompt_tokens)  # safety backup to "max_tokens", shouldn't matter
 
+    request["model"] = "TheBloke_OpenHermes-2.5-neural-chat-v3-3-Slerp-GPTQ_gptq-4bit-32g-actorder_True"
     # Set grammar
     if grammar is not None:
         request["grammar_string"] = grammar
 
-    if not endpoint.startswith(("http://", "https://")):
-        raise ValueError(f"Endpoint value ({endpoint}) must begin with http:// or https://")
-
+    # print("------------")
+    # print(json.dump(request))
     try:
-        URI = urljoin(endpoint.strip("/") + "/", WEBUI_API_SUFFIX.strip("/"))
-        response = requests.post(URI, json=request)
-        if response.status_code == 200:
-            result_full = response.json()
-            printd(f"JSON API response:\n{result_full}")
-            result = result_full["choices"][0]["text"]
-            usage = result_full.get("usage", None)
-        else:
-            raise Exception(
-                f"API call got non-200 response code (code={response.status_code}, msg={response.text}) for address: {URI}."
-                + f" Make sure that the web UI server is running and reachable at {URI}."
-            )
+        wmill_client = Windmill(base_url = "https://windmill.batbro.us", token= "DngylpNkfbqZeX0mkSUUb4sBSnMalO", workspace="batnetwork")
+        result_full = wmill_client.run_script("f/system/swap_model_with_openai_call", args= {"params": request, "suffix": WEBUI_API_SUFFIX})
+
+        printd(f"JSON API response:\n{result_full}")
+        result = result_full["choices"][0]["text"]
+        usage = result_full.get("usage", None)
 
     except:
         # TODO handle gracefully

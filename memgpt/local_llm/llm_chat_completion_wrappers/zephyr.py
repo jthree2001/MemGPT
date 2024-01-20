@@ -82,6 +82,8 @@ class ZephyrMistralWrapper(LLMChatCompletionWrapper):
             return json.dumps(airo_func_call, indent=2, ensure_ascii=JSON_ENSURE_ASCII)
 
         for message in messages[1:]:
+            if message["role"] == "tool":
+                message["role"] = "function"
             assert message["role"] in ["user", "assistant", "function"], message
 
             if message["role"] == "user":
@@ -252,6 +254,8 @@ class ZephyrMistralInnerMonologueWrapper(ZephyrMistralWrapper):
 
         # Last are the user/assistant messages
         for message in messages[1:]:
+            if message["role"] == "tool":
+                message["role"] = "function"
             assert message["role"] in ["user", "assistant", "function"], message
 
             if message["role"] == "user":

@@ -202,6 +202,7 @@ def get_chat_completion(
         usage["total_tokens"] = usage["prompt_tokens"] + usage["completion_tokens"]
 
     # unpack with response.choices[0].message.content
+    print("chat_completion_result")
     response = ChatCompletionResponse(
         id=str(uuid.uuid4()),  # TODO something better?
         choices=[
@@ -218,7 +219,7 @@ def get_chat_completion(
             )
         ],
         created=datetime.now().astimezone(),
-        model=model,
+        model="TheBloke_OpenOrcaxOpenChat-Preview2-13B-GPTQ_gptq-4bit-32g-actorder_True",
         # "This fingerprint represents the backend configuration that the model runs with."
         # system_fingerprint=user if user is not None else "null",
         system_fingerprint=None,
