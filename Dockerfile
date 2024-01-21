@@ -11,4 +11,4 @@ RUN pip install -e .
 RUN pip install wmill
 
 ENTRYPOINT []
-CMD ["memgpt server --type matrix"]
+CMD ["memgpt","server --type matrix"]
