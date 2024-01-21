@@ -579,6 +579,7 @@ class SyncServer(LockingServer):
 
         agent_state = AgentState(
             user_id=user.id,
+            id=agent_config["id"] if "id" in agent_config else uuid.uuid4(),
             name=agent_config["name"] if "name" in agent_config else utils.create_random_username(),
             preset=agent_config["preset"] if "preset" in agent_config else user.default_preset,
             # TODO we need to allow passing raw persona/human text via the server request

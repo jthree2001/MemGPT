@@ -213,6 +213,7 @@ def open_folder():
 class ServerChoice(Enum):
     rest_api = "rest"
     ws_api = "websocket"
+    matrix = "matrix"
 
 
 def server(
@@ -243,6 +244,17 @@ def server(
         try:
             # Start the subprocess in a new session
             uvicorn.run(app, host=host or "localhost", port=port or REST_DEFAULT_PORT)
+
+        except KeyboardInterrupt:
+            # Handle CTRL-C
+            print("Terminating the server...")
+            sys.exit(0)
+    if type == ServerChoice.matrix:
+        from memgpt.matrix.bot import bot
+
+        try:
+            print("Running Matrix server...")
+            bot.run()
 
         except KeyboardInterrupt:
             # Handle CTRL-C
