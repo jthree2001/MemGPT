@@ -24,7 +24,6 @@ class MessageHandler(Thread):
         self.user_id = uuid.uuid5(uuid.NAMESPACE_URL, self.obj["message"].sender)
         self.agent_id = uuid.uuid5(uuid.NAMESPACE_URL, self.obj["room"].room_id)
         self.client = MemGPT(
-            quickstart="memgpt_hosted",
             user_id=self.user_id,
             auto_save=True,
             config={
