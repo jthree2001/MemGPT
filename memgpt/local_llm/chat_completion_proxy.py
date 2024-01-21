@@ -138,26 +138,8 @@ def get_chat_completion(
         )
 
     try:
-        if endpoint_type == "webui":
-            result, usage = get_webui_completion(endpoint, prompt, context_window, grammar=grammar)
-        elif endpoint_type == "webui-legacy":
-            result, usage = get_webui_completion_legacy(endpoint, prompt, context_window, grammar=grammar)
-        elif endpoint_type == "lmstudio":
-            result, usage = get_lmstudio_completion(endpoint, prompt, context_window, api="completions")
-        elif endpoint_type == "lmstudio-legacy":
-            result, usage = get_lmstudio_completion(endpoint, prompt, context_window, api="chat")
-        elif endpoint_type == "llamacpp":
-            result, usage = get_llamacpp_completion(endpoint, prompt, context_window, grammar=grammar)
-        elif endpoint_type == "koboldcpp":
-            result, usage = get_koboldcpp_completion(endpoint, prompt, context_window, grammar=grammar)
-        elif endpoint_type == "ollama":
-            result, usage = get_ollama_completion(endpoint, model, prompt, context_window)
-        elif endpoint_type == "vllm":
-            result, usage = get_vllm_completion(endpoint, model, prompt, context_window, user)
-        else:
-            raise LocalLLMError(
-                f"Invalid endpoint type {endpoint_type}, please set variable depending on your backend (webui, lmstudio, llamacpp, koboldcpp)"
-            )
+        result, usage = get_webui_completion(endpoint, prompt, context_window, grammar=grammar)
+        
     except requests.exceptions.ConnectionError as e:
         raise LocalLLMConnectionError(f"Unable to connect to endpoint {endpoint}")
 

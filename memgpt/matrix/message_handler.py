@@ -58,7 +58,8 @@ class MessageHandler(Thread):
         if user is None:
             user = self.client.server.create_user(user_config={
                 "name": self.obj["message"].sender,
-                "id": self.user_id
+                "id": self.user_id,
+                "default_preset": "batnetwork"
             })
         if getattr(self, 'user', None) is None:
             self.user = user
@@ -70,8 +71,7 @@ class MessageHandler(Thread):
             agent = self.client.server.get_agent(user_id= self.user_id, agent_id=self.agent_id)
         if agent is None:
             agent = self.client.server.create_agent(user_id=self.user_id, agent_config={
-                "persona": "sam_pov",
-                "human": "cs_phd",
+                "persona": "deka",
                 "name": self.obj["room"].room_id,
                 "id": self.agent_id
             })

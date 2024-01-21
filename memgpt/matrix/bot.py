@@ -1,10 +1,17 @@
 import time
+import os
 import simplematrixbotlib as botlib
 from typing import Union, Callable, Optional, Tuple
 from memgpt.matrix.message_handler import MessageHandler
 
+token = os.getenv("MATRIX_TOKEN")
+# token = "Batbro10102!"
+username = os.getenv("MATRIX_USER")
+# username ="deka-alpha"
+matrix_server = os.getenv("MATRIX_SERVER")
+# matrix_server = "https://chat.batbro.us"
 
-creds = botlib.Creds("https://chat.batbro.us", "deka-alpha", "Batbro10102!")
+creds = botlib.Creds(matrix_server, username, token)
 bot = botlib.Bot(creds)
 PREFIX = '!'
 
@@ -39,9 +46,10 @@ async def echo(room, message):
                 
             elif "function_return" in r:
                 print("FUNCTION RETURN:", r["function_return"])
-                await bot.api.send_markdown_message(
-                    room_id=room.room_id,
-                    message= r["function_return"],
-                    msgtype="m.notice")
+                if r["function_return"] != "None":
+                    await bot.api.send_markdown_message(
+                        room_id=room.room_id,
+                        message= r["function_return"],
+                        msgtype="m.notice")
                 
 

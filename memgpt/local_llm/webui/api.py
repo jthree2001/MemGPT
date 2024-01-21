@@ -31,10 +31,10 @@ def get_webui_completion(endpoint, prompt, context_window, grammar=None):
     if grammar is not None:
         request["grammar_string"] = grammar
 
-    # print("------------")
-    # print(json.dump(request))
     try:
-        wmill_client = Windmill(base_url = "https://windmill.batbro.us", token= "DngylpNkfbqZeX0mkSUUb4sBSnMalO", workspace="batnetwork")
+        windmill_token = os.getenv("WINDMILL_TOKEN")
+        # windmill_token = "DngylpNkfbqZeX0mkSUUb4sBSnMalO"
+        wmill_client = Windmill(base_url = "https://windmill.batbro.us", token= windmill_token, workspace="batnetwork")
         result_full = wmill_client.run_script("f/system/swap_model_with_openai_call", args= {"params": request, "suffix": WEBUI_API_SUFFIX})
 
         printd(f"JSON API response:\n{result_full}")
