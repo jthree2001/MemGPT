@@ -17,8 +17,8 @@ def web_search(self, search_string: str):
     Returns:
         str: Query result string
     """
-    # windmill_token = os.getenv("WINDMILL_TOKEN")
-    windmill_token = "DngylpNkfbqZeX0mkSUUb4sBSnMalO"
+    windmill_token = os.getenv("WINDMILL_TOKEN")
+    # windmill_token = "DngylpNkfbqZeX0mkSUUb4sBSnMalO"
     try:
         wmill_client = Windmill(base_url = "https://windmill.batbro.us", token=windmill_token, workspace="batnetwork")
         result_full = wmill_client.run_script("u/michael/rewoo_execution", args= {"task_input": search_string})
