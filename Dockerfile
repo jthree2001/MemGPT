@@ -5,7 +5,7 @@ RUN pip install simplematrixbotlib
 
 RUN mkdir -p /memgpt
 WORKDIR /memgpt
-COPY ./
+COPY . ./
 
 RUN pip install -e .
 RUN pip install wmill
