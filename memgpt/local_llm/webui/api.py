@@ -26,7 +26,8 @@ def get_webui_completion(endpoint, prompt, context_window, grammar=None):
     request["max_tokens"] = int(context_window - prompt_tokens)
     request["max_new_tokens"] = int(context_window - prompt_tokens)  # safety backup to "max_tokens", shouldn't matter
 
-    request["model"] = "TheBloke_OpenHermes-2.5-neural-chat-v3-3-Slerp-GPTQ_gptq-4bit-32g-actorder_True"
+    request["model"] = os.getenv("MODEL_STRING")
+    
     # Set grammar
     if grammar is not None:
         request["grammar_string"] = grammar

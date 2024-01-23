@@ -29,7 +29,7 @@ async def echo(room, message):
         thread.start()
 
         while thread.is_alive():
-            await bot.async_client.room_typing(room.room_id)
+            await bot.async_client.room_typing(room.room_id, timeout=1000)
             time.sleep(.5)
         thread.join()
 
