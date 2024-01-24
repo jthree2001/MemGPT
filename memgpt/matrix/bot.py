@@ -20,11 +20,13 @@ PREFIX = '!'
 async def echo(room, message):
     match = botlib.MessageMatch(room, message, bot, PREFIX)
 
-    if match.is_not_from_this_bot():
+    if (match.is_not_from_this_bot() and room.joined_count == 2) or (match.is_not_from_this_bot() and match.contains("@deka")):
         obj = {
             "room": room,
             "message": message
         }
+        if room.joined_count > 2:
+            obj["message"].body = message.from_user + ": " + message.body
         thread = MessageHandler(obj)
         thread.start()
 

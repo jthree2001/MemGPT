@@ -21,7 +21,10 @@ class MessageHandler(Thread):
     def __init__(self, obj):
         Thread.__init__(self)
         self.obj = obj
-        self.user_id = uuid.uuid5(uuid.NAMESPACE_URL, self.obj["message"].sender)
+        if self.obj["room"].joined_count == 2:
+            self.user_id = uuid.uuid5(uuid.NAMESPACE_URL, self.obj["message"].sender)
+        else:
+            self.user_id = uuid.uuid5(uuid.NAMESPACE_URL, self.obj["room"].room_id)
         self.agent_id = uuid.uuid5(uuid.NAMESPACE_URL, self.obj["room"].room_id)
         self.client = MemGPT(
             user_id=self.user_id,
