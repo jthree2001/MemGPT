@@ -1,6 +1,9 @@
 from memgpt import MemGPT
 from threading import Thread
 import uuid
+from pprint import pprint
+from typing import Union
+from memgpt.agent import Agent
 from memgpt.data_types import (
     Source,
     Passage,
@@ -34,13 +37,15 @@ class MessageHandler(Thread):
             }
         )
         self.response = []
-        print("---------------")
         print("generated agent id: " + str(self.agent_id))
 
     def run(self):
         # This is where you can perform operations on the passed object
         self.get_or_create_user()
         self.agent_state = self.get_or_create_agent()
+        # Michael(note): this is to ensure memory is instantiated for the agent
+        memory_view = self.client.server.get_agent_memory(user_id=self.user_id, agent_id=self.agent_id)
+
         response = self.client.user_message(agent_id=self.agent_id, message=self.obj["message"].body)
         self.response = response
         return response
@@ -80,3 +85,10 @@ class MessageHandler(Thread):
         if getattr(self, 'agent_state', None) is None:
             self.agent_state = agent
         return agent
+    
+    def _get_agent(self) -> Union[Agent, None]:
+        """Get the agent object from the in-memory object store"""
+        for d in self.client.server.active_agents:
+            if d["user_id"] == str(self.user_id) and d["agent_id"] == str(self.agent_id):
+                return d["agent"]
+        return None
